@@ -1,0 +1,170 @@
+from aip import AipFace
+import cv2
+import matplotlib.pyplot as plt
+import math
+import base64
+import numpy as np
+from PIL import Image
+from io import BytesIO
+
+
+def fill_image(image):
+    width, height = image.size
+    print(width, height)
+
+    new_image_length = width if width > height else height
+
+    print(new_image_length)
+
+    # new_image = Image.new(image.mode, (new_image_length, new_image_length), color='white')
+    new_image = Image.new(image.mode, (new_image_length, new_image_length), color='white')
+
+    if width > height:
+
+        new_image.paste(image, (0, int((new_image_length - height) / 2)))
+    else:
+        new_image.paste(image, (int((new_image_length - width) / 2), 0))
+    return new_image
+
+
+def cut_image(image):
+    width, height = image.size
+    item_width = int(width / 3)
+    box_list = []
+    count = 0
+    for j in range(0, 3):
+        for i in range(0, 3):
+            count += 1
+            box = (i * item_width, j * item_width, (i + 1) * item_width, (j + 1) * item_width)
+            box_list.append(box)
+    print(count)
+    image_list = [image.crop(box) for box in box_list]
+    return image_list
+
+
+def show_images(image_list):
+    index = 1
+    for image in image_list:
+        image.save('C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\' + str(index) + '.png')
+        plt.imshow(image)
+        plt.show()
+        index += 1
+
+
+def rotate(img, num,A ,B , C, D, rotation):
+    withRect = math.sqrt((D[0] - A[0]) ** 2 + (D[1] - A[1]) ** 2) #矩形宽度
+    heightRect = math.sqrt((A[0] - B[0]) ** 2 + (A[1] - B[1]) ** 2)#矩形高度
+    angle = rotation  # 矩形框旋转角度
+    height = img.shape[0] # 原始图像高度
+    width = img.shape[1]  # 原始图像宽度
+    rotateMat = cv2.getRotationMatrix2D((width / 2, height / 2), angle, 1)  # 按angle角度旋转图像
+    heightNew = int(width * math.fabs(math.sin(math.radians(angle))) + height * math.fabs(math.cos(math.radians(angle))))
+    widthNew = int(height * math.fabs(math.sin(math.radians(angle))) + width * math.fabs(math.cos(math.radians(angle))))
+    rotateMat[0, 2] += (widthNew - width) / 2
+    rotateMat[1, 2] += (heightNew - height) / 2
+    imgRotation = cv2.warpAffine(img, rotateMat, (widthNew, heightNew), borderValue=(255, 255, 255))
+
+    # 旋转后图像的四点坐标
+    [[A[0]], [A[1]]] = np.dot(rotateMat, np.array([[A[0]], [A[1]], [1]]))
+    [[C[0]], [C[1]]] = np.dot(rotateMat, np.array([[C[0]], [C[1]], [1]]))
+    [[B[0]], [B[1]]] = np.dot(rotateMat, np.array([[B[0]], [B[1]], [1]]))
+    [[D[0]], [D[1]]] = np.dot(rotateMat, np.array([[D[0]], [D[1]], [1]]))
+
+    imgOut = imgRotation[int(B[1]):int(D[1]), int(A[0]):int(C[0])]
+    cv2.imwrite('C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\' + str(num) + '.png', imgOut)
+    return imgRotation  # rotated image
+
+
+def frame2base64(frame):
+    # 将视屏中的一帧图片转换成base64格式 返回base64编码
+    img = Image.fromarray(frame)  # 将每一帧转为Image
+    output_buffer = BytesIO()  # 创建一个BytesIO
+    img.save(output_buffer, format='JPEG')  # 写入output_buffer
+    byte_data = output_buffer.getvalue()  # 在内存中读取
+    base64_data_img = base64.b64encode(byte_data)  # 转为BASE64
+    return base64_data_img
+
+
+# 定义常量
+APP_ID = '15647216'
+API_KEY = 'lDsbbF6YmdtpdwdjZyIz08aF'
+SECRET_KEY = '2MBLkXYOVmGUjqPEfxKD8Wwz3lwzLSoW'
+
+# 初始化AipFace对象
+aipFace = AipFace(APP_ID, API_KEY, SECRET_KEY)
+
+
+filepath = "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\21.jpg"
+
+img = cv2.imread(filepath)
+image = Image.open(filepath)
+# 将图像转为正方形，不够的地方补充为白色底色
+
+image = fill_image(image)
+# 分为图像
+image_list = cut_image(image)
+# 保存图像
+
+show_images(image_list)
+
+base64_data = frame2base64(img)
+image = str(base64_data, 'utf-8')
+imageType = "BASE64"
+
+# 定义参数变量
+options = {}
+options["face_field"] = "age"
+options["max_face_num"] = 10
+options["face_type"] = "LIVE"
+
+# 调用人脸属性检测接口
+# t1 = cv2.getTickCount()
+
+result = aipFace.detect(image, imageType, options)
+
+# t2 = (cv2.getTickCount() - t1) / cv2.getTickFrequency()
+# print("t2 = %s" % t2)
+
+print(result)
+print(type(result))
+
+# 读取原图
+# cap = cv2.VideoCapture(image)
+# ret, img = cap.read()
+img = cv2.imread(filepath)
+img_0 = img
+
+# 解析位置信息
+face_num = result['result']['face_num']
+
+for num in range(0, int(face_num)):
+    location = result['result']['face_list'][num - 1]['location']
+    # print(location)
+    # print(location['face_list'][0])
+
+    Theta = location['rotation'] / 60  ### 注意：为啥是60度，自己多次测试的结果，必须得弄清楚rotation啥意思，相对于哪里的旋转角度
+    A = [int(location['left']), int(location['top'])]
+    B = [int(location['left']) + int(location['width'] * math.cos(Theta)),
+         int(location['top']) + int(location['width'] * math.sin(Theta))]
+    AC_Len = math.sqrt(location['width'] ** 2 + location['height'] ** 2)
+    AC_Theta = math.atan(location['height'] / location['width']) + location['rotation'] / 60
+    C = [int(location['left']) + int(AC_Len * math.cos(AC_Theta)), int(location['top']) + int(AC_Len * math.sin(AC_Theta))]
+    D = [int(location['left']) - int(location['height'] * math.sin(Theta)),int(location['top']) + int(location['height'] * math.cos(Theta))]
+
+    cv2.line(img, tuple(A), tuple(B), (0, 0, 255), 1)
+    cv2.line(img, tuple(B), tuple(C), (0, 0, 255), 1)
+    cv2.line(img, tuple(C), tuple(D), (0, 0, 255), 1)
+    cv2.line(img, tuple(D), tuple(A), (0, 0, 255), 1)
+
+    rotate(img_0, num, A, B, C, D, location['rotation'])
+
+
+    # left_top = (int(location['left']),int(location['top']))
+    # right_bottom = (left_top[0]+int(location['width']),left_top[1]+int(location['height']))
+    # cv2.rectangle(img,left_top, right_bottom, (0,0,255),2)
+
+cv2.imshow('img', img)
+cv2.waitKey(0)
+
+plt.imshow(img, 'gray')
+plt.show()
