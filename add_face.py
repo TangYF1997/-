@@ -3,7 +3,7 @@ import base64
 
 
 '''
-人脸注册
+1:人脸注册
 输入图像路径，根据学生id和学生所在的组（可以是班级，也可以是课程）将图片载入人脸库的固定位置
 '''
 
@@ -38,6 +38,12 @@ def add_face(filepath, user_id, group_id, user_info):
 #     add_face(filepath,str(i),"DX1503","")
 
 
+'''
+2:人脸更新函数
+根据输入的学生学号和所在组的名称，将该学生的人脸库中的照片全部替换为输入的图片
+'''
+
+
 def update_face(filepath, user_id, group_id, user_info):
     request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/update"
 
@@ -57,11 +63,19 @@ def update_face(filepath, user_id, group_id, user_info):
        print(content)
 
 
+# i = 22
+# filepath = 'C:\\Users\\Administrator\\Pictures\\大教室2\\' + str(i) + '.jpg'
+# update_face(filepath, str(i), "DX1503", "")
+
+
 '''
-人脸更新函数，根据输入的学生学号和所在组的名称，将该学生的人脸库中的照片全部替换为输入的图片
+3：人脸删除。
+删除用户的某一张人脸，如果该用户只有一张人脸图片，则同时删除用户。这里需要输学生学号，学生所在的组，以及人脸图片，所以要实现此功能可能需要先获取图像
+因为百度AI文档中没有写调用例子，所以我先不写
 '''
 
-i = 22
-filepath = 'C:\\Users\\Administrator\\Pictures\\大教室2\\' + str(i) + '.jpg'
-update_face(filepath, str(i), "DX1503", "")
+
+def delete_face(user_id, group_id, face_token):
+    request_url = "https: // aip.baidubce.com / rest / 2.0 / face / v3 / faceset / face / delete"
+
 
