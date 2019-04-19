@@ -76,6 +76,205 @@ def update_face(filepath, user_id, group_id, user_info):
 
 
 def delete_face(user_id, group_id, face_token):
-    request_url = "https: // aip.baidubce.com / rest / 2.0 / face / v3 / faceset / face / delete"
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/face/delete"
 
+    params = "{\"user_id\":\""+user_id+"\",\"group_id\":\""+group_id+"\",\"face_token\":\""+face_token+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+
+# get_user_facelist("22", "DX1502")
+# delete_face("22", "DX1502", "12bb74e9bb9c51b1a729be862e988695")
+
+
+'''
+4：用户信息查询
+输入学生的学号，获得学生所在的组和学生的信息user_info
+用户组id(由数字、字母、下划线组成，长度限制48B)，如传入“@ALL”则从所有组中查询用户信息。注：处于不同组，但uid相同的用户，我们认为是同一个用户。
+'''
+
+
+def get_user(user_id, group_id):  # group_id如传入“@ALL”则从所有组中查询用户信息
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/get"
+    params = "{\"user_id\":\""+user_id+"\",\"group_id\":\""+group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+
+# i = 22
+# get_user(str(i), "@ALL")
+
+'''
+5：获取用户的人脸列表。
+用于获取一个用户的全部人脸列表。输入学生学号，组的id，返回全部人脸以及添加时间
+'''
+
+
+def get_user_facelist(user_id, group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/face/getlist"
+    params = "{\"user_id\":\""+user_id+"\",\"group_id\":\""+group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+
+# i = 22
+# get_user_facelist(str(i), "DX1503")
+
+
+'''
+6：获取某一组的用户列表。
+输入组名，获取该组所有用户的学号形成的list
+
+'''
+
+
+def getusers_group(group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/getusers"
+    params = "{\"group_id\":\""+group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+# getusers_group("DX1503")
+
+
+'''
+7：复制用户。
+并不是向一个指定组内添加用户，而是直接从其它组复制用户信息 如果需要注册用户，请直接使用人脸注册接口，输入用户id，所在组的id以及需要复制到的组的id
+如果其他组有该用户，则会在该用户中在添加一张照片
+如果没有该用户，就新建该用户
+'''
+
+
+def copy_user(user_id, src_group_id, dst_group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/copy"
+    params = "{\"user_id\":\""+user_id+"\",\"src_group_id\":\""+src_group_id+"\",\"dst_group_id\":\""+dst_group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+# i = 22
+# copy_user(str(i), "DX1503", "DX1501")
+
+
+'''
+8：删除用户。
+将用户从某个组中删除。输入用户id，所在组的id
+'''
+
+
+def delete_user(user_id, group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/user/delete"
+    params = "{\"group_id\":\""+group_id+"\",\"user_id\":\""+user_id+"\"}"
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+
+# delete_user("22", "DX1501")
+
+
+'''
+9：创建用户组。
+创建一个空的用户组，如果该组存在，则返回错误信息，输入需要创建的组的id
+'''
+
+
+def add_group(group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/add"
+    params = "{\"group_id\":\""+group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+# add_group("DX1504")
+
+
+'''
+10：删除用户组。
+删除用户组下所有的用户及人脸，如果组不存在 则返回错误。输入需要删除的组的id
+'''
+
+
+def delete_group(group_id):
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/delete"
+    params = "{\"group_id\":\""+group_id+"\"}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+# delete_group("DX1504")
+
+
+'''
+10：删除用户组。
+删除用户组下所有的用户及人脸，如果组不存在 则返回错误。输入需要删除的组的id
+'''
+
+
+def getlist_group():
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/faceset/group/getlist"
+
+    params = "{\"start\":0,\"length\":100}"
+
+    access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/json')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    if content:
+        print(content)
+
+# getlist_group()
 
