@@ -11,6 +11,3 @@ def get_info(name, age):
         b = " '{}',公元198年，孙策周瑜当时都是23岁，都建功立业了，你比人家还大{}岁，要加把劲啊".format(name, count)
     c = a + '\n\n' + b + '\n\n'
     return c
-
-c = get_info('哈哈',13)
-print(c)
