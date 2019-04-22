@@ -1,6 +1,6 @@
 import urllib.request as urllib2
 import base64
-
+null = ''
 
 '''
 1:人脸注册
@@ -23,8 +23,13 @@ def add_face(filepath, user_id, group_id, user_info):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")  # 将信息解码后读取
-    if content:
-       print(content)
+    content = eval(content)
+    if content['error_code'] != 0 :
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功注册人脸"
+    return response_msg
+
 
 
 # '''
@@ -59,8 +64,13 @@ def update_face(filepath, user_id, group_id, user_info):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")  # 将信息解码后读取
-    if content:
-       print(content)
+    content = eval(content)
+    if content['error_code'] != 0 :
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功更新人脸"
+    return response_msg
+
 
 
 # i = 22
@@ -86,8 +96,12 @@ def delete_face(user_id, group_id, face_token):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0 :
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功删除人脸"
+    return response_msg
 
 
 # get_user_facelist("22", "DX1502")
@@ -111,8 +125,12 @@ def get_user(user_id, group_id):  # group_id如传入“@ALL”则从所有组�
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = content['result']['user_list']
+    return response_msg
 
 
 # i = 22
@@ -134,8 +152,12 @@ def get_user_facelist(user_id, group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = content['result']['face_list']
+    return response_msg
 
 
 # i = 22
@@ -159,8 +181,12 @@ def getusers_group(group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = content['result']
+    return response_msg
 
 # getusers_group("DX1503")
 
@@ -183,8 +209,12 @@ def copy_user(user_id, src_group_id, dst_group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功复制人脸"
+    return response_msg
 
 # i = 22
 # copy_user(str(i), "DX1503", "DX1501")
@@ -205,8 +235,12 @@ def delete_user(user_id, group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功删除用户"
+    return response_msg
 
 
 # delete_user("22", "DX1501")
@@ -228,8 +262,12 @@ def add_group(group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功创建用户组"
+    return response_msg
 
 # add_group("DX1504")
 
@@ -250,15 +288,19 @@ def delete_group(group_id):
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = "成功删除用户组"
+    return response_msg
 
 # delete_group("DX1504")
 
 
 '''
-10：删除用户组。
-删除用户组下所有的用户及人脸，如果组不存在 则返回错误。输入需要删除的组的id
+11：组列表查询。
+"{\"start\":0,\"length\":100}"，请求参数只有起始序号和结束序号，返回组的id的一个list
 '''
 
 
@@ -273,8 +315,11 @@ def getlist_group():
     request.add_header('Content-Type', 'application/json')
     response = urllib2.urlopen(request)
     content = response.read().decode("utf-8")
-    if content:
-        print(content)
+    content = eval(content)
+    if content['error_code'] != 0:
+        response_msg = content['error_msg']
+    else:
+        response_msg = content['result']
+    return response_msg
 
 # getlist_group()
-

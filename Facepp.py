@@ -51,8 +51,8 @@ def search_face(image_box, student_list, image, box, group_id_list):
     response = urllib2.urlopen(request)
     content = response.read()
 
-    if content:
-        print(content)
+    # if content:
+    #     print(content)
     content = content.decode("utf-8")
     content = eval(content)
     print(content)

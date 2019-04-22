@@ -106,70 +106,20 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>350</x>
-      <y>100</y>
-      <width>54</width>
-      <height>12</height>
+      <x>60</x>
+      <y>40</y>
+      <width>121</width>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Adobe Arabic</family>
+      <pointsize>12</pointsize>
+     </font>
     </property>
     <property name="text">
-     <string>学号</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>130</y>
-      <width>54</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>组</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>170</y>
-      <width>54</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>选择图片</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>100</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>130</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>170</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
+     <string>百度人脸库操作</string>
     </property>
    </widget>
   </widget>
@@ -182,15 +132,6 @@
      <height>23</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>操作</string>
-    </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
-   </widget>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action">
@@ -227,9 +168,178 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w2()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>172</x>
+     <y>164</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>274</x>
+     <y>170</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_3</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w3()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>168</x>
+     <y>217</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>277</x>
+     <y>207</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_4</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w4()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>182</x>
+     <y>247</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_5</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w5()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>186</x>
+     <y>294</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>282</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_6</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w6()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>171</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>284</x>
+     <y>322</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w7()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>164</x>
+     <y>357</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>287</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w8()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>399</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>396</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_9</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w9()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>169</x>
+     <y>440</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>292</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_10</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w10()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>475</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>298</x>
+     <y>471</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_11</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_w11()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>197</x>
+     <y>514</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>301</x>
+     <y>508</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>show_w1()</slot>
-  <slot>slot2()</slot>
+  <slot>show_w2()</slot>
+  <slot>show_w3()</slot>
+  <slot>show_w4()</slot>
+  <slot>show_w5()</slot>
+  <slot>show_w6()</slot>
+  <slot>show_w7()</slot>
+  <slot>show_w8()</slot>
+  <slot>show_w9()</slot>
+  <slot>show_w10()</slot>
+  <slot>show_w11()</slot>
  </slots>
 </ui>
