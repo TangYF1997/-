@@ -12,7 +12,7 @@ import numpy as np
 '''
 调用Face++的API来实现将一张高清原图中的人脸聚集部分切割下来，然后分块，方便百度人脸M:N搜索
 '''
-
+null = ''
 
 def get_face_location(location):
     Theta = location['rotation'] / 60  # 注意：为啥是60度，自己多次测试的结果，必须得弄清楚rotation啥意思，相对于哪里的旋转角度
@@ -29,7 +29,7 @@ def get_face_location(location):
 # 根据输入的图片和位置信息，将图片框出来，返回4个端点的坐标
 
 
-def search_face(image_box, image, box, group_id_list):
+def search_face(image_box, student_list, image, box, group_id_list):
     request_multi_search_url = "https://aip.baidubce.com/rest/2.0/face/v3/multi-search"
     # filepath = 'C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\3.png'
 
@@ -38,6 +38,8 @@ def search_face(image_box, image, box, group_id_list):
     #     base64_data = base64.b64encode(fp.read())
     # img_base64_utf_8 = str(base64_data, 'utf-8')
     # print(img_base64_utf_8)
+    #
+    # global null
     img_base64_utf_8 = str(PIL2base64(image_box), 'utf-8')
 
     params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id_list\":\""+group_id_list+"\",\"max_face_num\" : 10,\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\"}"
@@ -52,11 +54,13 @@ def search_face(image_box, image, box, group_id_list):
     if content:
         print(content)
     content = content.decode("utf-8")
-    if content[14] != '0':
-        str1 = content[33:50]
+    content = eval(content)
+    print(content)
+    if content['error_code'] != 0:
+        str1 = content['error_msg']
         print(str1)
     else:
-        content = ast.literal_eval(content)
+        # content = ast.literal_eval(content)
         for num in range(0, int(content['result']['face_num'])):
             if content['result']['face_list'][num - 1]['user_list'] == []:
                 user_id = "Unknown"
@@ -64,6 +68,7 @@ def search_face(image_box, image, box, group_id_list):
             else:
                 user_id = str(content['result']['face_list'][num - 1]['user_list'][0]['user_id'])
                 print('学生id为' + str(content['result']['face_list'][num - 1]['user_list'][0]['user_id']))
+                student_list.append(user_id)
                 print('相似度为' + str(content['result']['face_list'][num - 1]['user_list'][0]['score']))
             location = content['result']['face_list'][num - 1]['location']
             (A, B, C, D) = get_face_location(location)
@@ -78,7 +83,7 @@ def search_face(image_box, image, box, group_id_list):
         # plt.imshow(sample_image)
         # plt.show()
         # cv2.imwrite('C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\23.jpg', sample_image)
-
+    return student_list
 # 返回ABCD四点坐标，是在输入图像中的坐标，后面要在原图显示得处理一下
 
 
@@ -131,9 +136,11 @@ def frameFace(img, A, B, C, D, user_id):
 
 
 def box_search(image_PIL, image_cv2, box_list):
+    student_list = []
     for box in box_list:
         image_box = image_PIL.crop(box)  # 此图为切割后的一个部分图像
-        search_face(image_box, image_cv2, box, "DX1503")  # 这里的group_list后面会变成变量
+        student_list = search_face(image_box, student_list, image_cv2, box, "DX1503")  # 这里的group_list后面会变成变量
+    return student_list
 
 
 def frame2base64(frame):
@@ -312,8 +319,9 @@ content = ast.literal_eval(req_con)
 
 box_list, count = cut_image(image_big, min_left_ratio, max_right_ratio,
                        min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio)
-box_search(image_big, cv2_img, box_list)
-
+student_list = box_search(image_big, cv2_img, box_list)
+student_list2 = sorted(set(student_list), key=student_list.index)
+print(student_list2)
 
 # image.save("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\26.jpg")
 cv2.imwrite("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\28.jpg", cv2_img)
