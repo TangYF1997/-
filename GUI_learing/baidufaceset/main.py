@@ -239,15 +239,10 @@ class Dialog7(QtWidgets.QMainWindow, w7.Ui_Dialog):
         self.dst_group_id = self.lineEdit_3.text()
         response_msg = add_face.copy_user(self.id, self.src_group_id, self.dst_group_id)
         try:
+            test_db.mssql.ExecNonQuery(test_db.del_student(self.id, self.dst_group_id))
             test_db.mssql.ExecNonQuery(test_db.copy_student(self.id, self.src_group_id, self.dst_group_id))  # 数据库中复制
-        except Exception:
-            row = test_db.mssql.ExecQuery(test_db.search_student(self.id, self.src_group_id))  # 数据库中复制
-            print(str(row[0][1]))
-            self.name = str(row[0][1])
-            try:
-                test_db.mssql.ExecNonQuery(test_db.update_student(self.id, self.src_group_id, self.dst_group_id))  # 更新
-            except Exception as e:
-                print(e)
+        except Exception as e:
+            print(e)
         finally:
             self.textBrowser.append(str(response_msg) + '\n')
 
@@ -270,7 +265,12 @@ class Dialog8(QtWidgets.QMainWindow, w8.Ui_Dialog):
         self.id = self.lineEdit.text()
         self.group = self.lineEdit_2.text()
         response_msg = add_face.delete_user(self.id, self.group)
-        self.textBrowser.append(str(response_msg) + '\n')
+        try:
+            test_db.mssql.ExecNonQuery(test_db.del_student(self.id, self.dst_group_id))
+        except Exception as e:
+            print(e)
+        finally:
+            self.textBrowser.append(str(response_msg) + '\n')
 
     def reject(self):
         self.close()
@@ -289,7 +289,12 @@ class Dialog9(QtWidgets.QMainWindow, w9.Ui_Dialog):
     def accept(self):
         self.group = self.lineEdit.text()
         response_msg = add_face.add_group(self.group)
-        self.textBrowser.append(str(response_msg) + '\n')
+        try:
+            test_db.mssql.ExecNonQuery(test_db.creat_table(self.group))
+        except Exception:
+            self.textBrowser.append("表格名称出错或者表格已存在")
+        finally:
+            self.textBrowser.append(str(response_msg) + '\n')
 
     def reject(self):
         self.close()
@@ -309,7 +314,12 @@ class Dialog10(QtWidgets.QMainWindow, w10.Ui_Dialog):
     def accept(self):
         self.group = self.lineEdit.text()
         response_msg = add_face.delete_group(self.group)
-        self.textBrowser.append(str(response_msg) + '\n')
+        try:
+            test_db.mssql.ExecNonQuery(test_db.del_table(self.group))
+        except Exception:
+            self.textBrowser.append("表格名称出错或者表格不存在")
+        finally:
+            self.textBrowser.append(str(response_msg) + '\n')
 
     def reject(self):
         self.close()

@@ -77,15 +77,41 @@ def copy_student(user_id, src_course_id, dst_course_id):
     return sql
 
 
-def test():
+def creat_table(course_id):
+    sql = """
+    CREATE TABLE """+course_id+"""(
+        [学号（student_id）] [nchar](13) NOT NULL,
+        [姓名（student_name）] [nchar](5) NULL,
+        [课程] [nchar](10) NOT NULL,
+        [拍到次数] [int] NULL,
+        [抬头率] [float] NULL,
+        [是否到勤] [bit] NULL,
+     CONSTRAINT ["""+course_id+"""_1] PRIMARY KEY CLUSTERED 
+    (
+        [学号（student_id）] ASC
+    )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+    ) ON [PRIMARY]
+    """
+    return sql
+
+
+def del_table(course_id):
+    sql = """
+    DROP TABLE """+course_id+"""
+    """
+    return sql
+
+
+# def test():
     # rows = mssql.ExecNonQuery(add_student('0121509350314', '吴博二号', 'DIP'))  #注册
-    rows = mssql.ExecNonQuery(del_student('0121509350314', 'DIP'))  # 删除
-    print(rows)
+    # rows = mssql.ExecNonQuery(del_student('0121509350314', 'DIP'))  # 删除
+    # mssql.ExecNonQuery(creat_table('DQP'))  # 创建表
+    # mssql.ExecNonQuery(del_table('DMP'))  # 删除表
 
-
-if __name__ == '__main__':
-    main()
-    test()
+#
+# if __name__ == '__main__':
+#     main()
+    # test()
 
 #
 #
