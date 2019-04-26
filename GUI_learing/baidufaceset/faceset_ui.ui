@@ -11,117 +11,235 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>学生考勤系统</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>30</x>
-      <y>90</y>
-      <width>181</width>
-      <height>431</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="pushButton">
-       <property name="text">
-        <string>人脸注册</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_2">
-       <property name="text">
-        <string>人脸更新</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_3">
-       <property name="text">
-        <string>人脸删除</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_4">
-       <property name="text">
-        <string>查询用户信息</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_5">
-       <property name="text">
-        <string>获取用户的人脸列表</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_6">
-       <property name="text">
-        <string>获取某一组的用户列表</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_7">
-       <property name="text">
-        <string>复制用户</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_8">
-       <property name="text">
-        <string>删除用户</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_9">
-       <property name="text">
-        <string>创建用户组</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_10">
-       <property name="text">
-        <string>删除用户组</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButton_11">
-       <property name="text">
-        <string>组列表查询</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>40</y>
-      <width>121</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Adobe Arabic</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>百度人脸库操作</string>
-    </property>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Adobe Arabic</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>百度人脸库操作</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>人脸注册</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>人脸更新</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_3">
+        <property name="text">
+         <string>人脸删除</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_4">
+        <property name="text">
+         <string>查询用户信息</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_5">
+        <property name="text">
+         <string>获取用户的人脸列表</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_6">
+        <property name="text">
+         <string>获取某一组的用户列表</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_7">
+        <property name="text">
+         <string>复制用户</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_8">
+        <property name="text">
+         <string>删除用户</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_9">
+        <property name="text">
+         <string>创建用户组</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_10">
+        <property name="text">
+         <string>删除用户组</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_11">
+        <property name="text">
+         <string>组列表查询</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <widget class="QLabel" name="label_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>输入相片地址进行考勤，或者点击按钮开启自动考勤</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>相片地址</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="lineEdit"/>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pushButton_15">
+          <property name="text">
+           <string>选择图片</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="leftMargin">
+         <number>10</number>
+        </property>
+        <property name="topMargin">
+         <number>10</number>
+        </property>
+        <property name="bottomMargin">
+         <number>10</number>
+        </property>
+        <item>
+         <widget class="QPushButton" name="pushButton_12">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>开始考勤</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_13">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>自动考勤</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_14">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>显示大图</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>400</width>
+          <height>300</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>400</width>
+          <height>300</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="textBrowser"/>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -159,8 +277,8 @@
    <slot>show_w1()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>127</y>
+     <x>131</x>
+     <y>183</y>
     </hint>
     <hint type="destinationlabel">
      <x>274</x>
@@ -175,8 +293,8 @@
    <slot>show_w2()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>172</x>
-     <y>164</y>
+     <x>137</x>
+     <y>233</y>
     </hint>
     <hint type="destinationlabel">
      <x>274</x>
@@ -191,8 +309,8 @@
    <slot>show_w3()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>168</x>
-     <y>217</y>
+     <x>137</x>
+     <y>283</y>
     </hint>
     <hint type="destinationlabel">
      <x>277</x>
@@ -207,8 +325,8 @@
    <slot>show_w4()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>182</x>
-     <y>247</y>
+     <x>137</x>
+     <y>333</y>
     </hint>
     <hint type="destinationlabel">
      <x>280</x>
@@ -223,8 +341,8 @@
    <slot>show_w5()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>186</x>
-     <y>294</y>
+     <x>137</x>
+     <y>383</y>
     </hint>
     <hint type="destinationlabel">
      <x>282</x>
@@ -239,8 +357,8 @@
    <slot>show_w6()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>324</y>
+     <x>137</x>
+     <y>433</y>
     </hint>
     <hint type="destinationlabel">
      <x>284</x>
@@ -255,8 +373,8 @@
    <slot>show_w7()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>164</x>
-     <y>357</y>
+     <x>137</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
      <x>287</x>
@@ -271,8 +389,8 @@
    <slot>show_w8()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>179</x>
-     <y>399</y>
+     <x>137</x>
+     <y>533</y>
     </hint>
     <hint type="destinationlabel">
      <x>291</x>
@@ -287,8 +405,8 @@
    <slot>show_w9()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>169</x>
-     <y>440</y>
+     <x>137</x>
+     <y>583</y>
     </hint>
     <hint type="destinationlabel">
      <x>292</x>
@@ -303,8 +421,8 @@
    <slot>show_w10()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>180</x>
-     <y>475</y>
+     <x>137</x>
+     <y>633</y>
     </hint>
     <hint type="destinationlabel">
      <x>298</x>
@@ -319,12 +437,60 @@
    <slot>show_w11()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>197</x>
-     <y>514</y>
+     <x>137</x>
+     <y>683</y>
     </hint>
     <hint type="destinationlabel">
      <x>301</x>
      <y>508</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_12</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_image()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>361</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>705</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_14</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>show_bigimage()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>774</x>
+     <y>159</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>562</x>
+     <y>466</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_15</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>chose_img()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>747</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>708</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>
@@ -341,5 +507,9 @@
   <slot>show_w9()</slot>
   <slot>show_w10()</slot>
   <slot>show_w11()</slot>
+  <slot>show_image()</slot>
+  <slot>show_bigimage()</slot>
+  <slot>slot1()</slot>
+  <slot>chose_img()</slot>
  </slots>
 </ui>

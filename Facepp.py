@@ -152,6 +152,7 @@ def frame2base64(frame):
     base64_data_img = base64.b64encode(byte_data)  # 转为BASE64
     return base64_data_img
 
+
 def PIL2base64(img):
     # 将视屏中的一帧图片转换成base64格式 返回base64编码
     output_buffer = BytesIO()  # 创建一个BytesIO
@@ -160,7 +161,8 @@ def PIL2base64(img):
     base64_data_img = base64.b64encode(byte_data)  # 转为BASE64
     return base64_data_img
 
-def cut_image(image, min_left_ratio, max_right_ratio, min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio):
+
+def cut_image(image, cv2_img, min_left_ratio, max_right_ratio, min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio):
     image_width, img_height = image.size
     min_left = int(min_left_ratio * image_width)
     max_right = int(max_right_ratio * image_width)
@@ -290,42 +292,45 @@ def frame_face(image_compressed, response_content):
     2.图中最大人脸框的大小占图高的比例
     '''
 
-t1 = cv2.getTickCount()
-http_url = "https://api-cn.faceplusplus.com/facepp/v3/detect"  # 你要调用API的URL
-key = "qFlVJKRVTBaku9Z7RN88Il6uYqcUXVjP"
-secret = "_R-LS6ogjkqiJtSBFDHDicrm025_5Ohq"  # face++提供的一对密钥
+def attendance_system(filepath):
+    t1 = cv2.getTickCount()
+    http_url = "https://api-cn.faceplusplus.com/facepp/v3/detect"  # 你要调用API的URL
+    key = "qFlVJKRVTBaku9Z7RN88Il6uYqcUXVjP"
+    secret = "_R-LS6ogjkqiJtSBFDHDicrm025_5Ohq"  # face++提供的一对密钥
+
+    cv2_img = cv2.imread(filepath)  # cv2 的图像
+    cv2_img_resized = resize_img(cv2_img)
+    image = Image.fromarray(cv2_img_resized)  # 将每一帧转为Image
+    image_big = Image.open(filepath)
+
+    img_base64 = frame2base64(cv2_img_resized)
+
+    data = {"api_key": key,
+            "api_secret": secret,
+            'image_base64': img_base64}
+
+    response = requests.post(http_url, data=data)  # POTS上传
+    req_con = response.content.decode('utf-8')  # response的内容是JSON格式
+    content = ast.literal_eval(req_con)
+
+    (min_left_ratio, max_right_ratio, min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio) \
+        = frame_face(image, content)
+
+    box_list, count = cut_image(image_big, cv2_img, min_left_ratio, max_right_ratio,
+                           min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio)
+    student_list = box_search(image_big, cv2_img, box_list)
+    student_list2 = sorted(set(student_list), key=student_list.index)
+    print(student_list2)
+
+    # image.save("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\26.jpg")
+    cv2.imwrite("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\28.jpg", cv2_img)
+    cv2.waitKey(0)
+
+    t2 = (cv2.getTickCount() - t1) / cv2.getTickFrequency()
+    print(t2)
+    return student_list2,cv2_img
+
 
 # 图片路径
-filepath = "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\js_2_big.jpg"  # 原图图片文件的绝对路径
-
-
-cv2_img = cv2.imread(filepath)  # cv2 的图像
-cv2_img_resized = resize_img(cv2_img)
-image = Image.fromarray(cv2_img_resized)  # 将每一帧转为Image
-image_big = Image.open(filepath)
-
-img_base64 = frame2base64(cv2_img_resized)
-
-data = {"api_key": key,
-        "api_secret": secret,
-        'image_base64': img_base64}
-
-response = requests.post(http_url, data=data)  # POTS上传
-req_con = response.content.decode('utf-8')  # response的内容是JSON格式
-content = ast.literal_eval(req_con)
-
-(min_left_ratio, max_right_ratio, min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio) \
-    = frame_face(image, content)
-
-box_list, count = cut_image(image_big, min_left_ratio, max_right_ratio,
-                       min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio)
-student_list = box_search(image_big, cv2_img, box_list)
-student_list2 = sorted(set(student_list), key=student_list.index)
-print(student_list2)
-
-# image.save("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\26.jpg")
-cv2.imwrite("C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\28.jpg", cv2_img)
-cv2.waitKey(0)
-
-t2 = (cv2.getTickCount() - t1) / cv2.getTickFrequency()
-print(t2)
+# filepath = "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu\\js_2_big.jpg"  # 原图图片文件的绝对路径
+# attendance_system(filepath)

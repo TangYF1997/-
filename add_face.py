@@ -167,7 +167,6 @@ def get_user_facelist(user_id, group_id):
 '''
 6：获取某一组的用户列表。
 输入组名，获取该组所有用户的学号形成的list
-
 '''
 
 

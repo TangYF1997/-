@@ -1,8 +1,12 @@
-import sys
+import sys,cv2
 import faceset_ui
-import w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11
-import add_face
+import w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w_showimage
+from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene
+import add_face, Facepp
 from PyQt5 import QtWidgets, QtGui
+import pymssql
+import test_db
 
 
 class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
@@ -45,6 +49,31 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
     def show_w11(self):  # 显示窗体11
         w11.show()
 
+    def show_image(self):
+        self.filepath = self.lineEdit.text()
+        list,opencv_img = Facepp.attendance_system(self.filepath)
+        self.textBrowser.append(str(list))
+        rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
+        height, width, channel = rgb_img.shape
+        bytesPerLine = 3 * width
+        qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+        pixmap = QPixmap.fromImage(qImg)
+        self.label_6.setPixmap(pixmap)
+        self.label_6.setScaledContents(True)
+
+    def show_bigimage(self):
+        self.filepath = self.lineEdit.text()
+        w_showimage.show()
+        pix = QPixmap(self.filepath)
+        self.item = QGraphicsPixmapItem(pix)
+        self.scene = QGraphicsScene()  # 创建场景s
+        self.scene.addItem(self.item)
+        w_showimage.graphicsView.setScene(self.scene)
+
+    def chose_img(self):
+        path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu")
+        self.lineEdit.setText(str(path[0]))
+
 
 '''
 子窗体1，人脸注册
@@ -58,17 +87,27 @@ class Dialog1(QtWidgets.QMainWindow, w1.Ui_Dialog):
 
     def accept(self):
         self.id = self.lineEdit.text()
+        self.name = self.lineEdit_4.text()
         self.group = self.lineEdit_2.text()
         self.file_path = self.lineEdit_3.text()
-        response_msg = add_face.add_face(self.file_path, self.id, self.group, '')
-        self.textBrowser.append(str(response_msg))
+        response_msg = add_face.add_face(self.file_path, self.id, self.group, self.name)
+        try:
+            test_db.mssql.ExecNonQuery(test_db.add_student(self.id, self.name, self.group))  # 注册
+        except Exception:
+            self.textBrowser.append("该学生已注册，请不要重复注册")
+        finally:
+            self.textBrowser.append(str(response_msg))
+
+    def chose_img(self):
+        path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\Pictures\\大教室2")
+        self.lineEdit_3.setText(str(path[0]))
 
     def reject(self):
         self.close()
 
 
 '''
-子窗体2，人脸跟新
+子窗体2，人脸更新
 '''
 
 
@@ -79,10 +118,16 @@ class Dialog2(QtWidgets.QMainWindow, w2.Ui_Dialog):
 
     def accept(self):
         self.id = self.lineEdit.text()
+        self.name = self.lineEdit_4.text()
         self.group = self.lineEdit_2.text()
         self.file_path = self.lineEdit_3.text()
-        response_msg = add_face.update_face(self.file_path, self.id, self.group, '')
+        response_msg = add_face.update_face(self.file_path, self.id, self.group, self.name)
+        test_db.mssql.ExecNonQuery(test_db.update_student(self.id, self.name, self.group))  # 更新
         self.textBrowser.append(str(response_msg))
+
+    def chose_img(self):
+        path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\Pictures\\大教室2")
+        self.lineEdit_3.setText(str(path[0]))
 
     def reject(self):
         self.close()
@@ -161,11 +206,19 @@ class Dialog6(QtWidgets.QMainWindow, w6.Ui_Dialog):
 
     def accept(self):
         self.group = self.lineEdit.text()
-        response_msg = add_face.getusers_group(self.group)
-        if response_msg['user_id_list'] == []:
-            self.textBrowser.append("该组无用户或不存在")
-        else:
-            self.textBrowser.append(str(response_msg['user_id_list']))
+        response_msg = add_face.getusers_group(self.group)  # 百度人脸库查询
+        try:
+            row = test_db.mssql.ExecQuery(test_db.search_student_in_course(self.group))  # 数据库中查询
+        except Exception:
+                self.textBrowser.append("该组无用户或不存在于数据库")
+        finally:
+            if response_msg['user_id_list'] == []:
+                self.textBrowser.append("该组无用户或不存在于人脸库")
+            else:
+                # self.textBrowser.append(str(response_msg['user_id_list']) + str(row))  # 在百度人脸库中搜索的结果
+                for i in row:
+                    self.textBrowser.append(str(i))
+
     def reject(self):
         self.close()
 
@@ -185,7 +238,19 @@ class Dialog7(QtWidgets.QMainWindow, w7.Ui_Dialog):
         self.src_group_id = self.lineEdit_2.text()
         self.dst_group_id = self.lineEdit_3.text()
         response_msg = add_face.copy_user(self.id, self.src_group_id, self.dst_group_id)
-        self.textBrowser.append(str(response_msg) + '\n')
+        try:
+            test_db.mssql.ExecNonQuery(test_db.copy_student(self.id, self.src_group_id, self.dst_group_id))  # 数据库中复制
+        except Exception:
+            row = test_db.mssql.ExecQuery(test_db.search_student(self.id, self.src_group_id))  # 数据库中复制
+            print(str(row[0][1]))
+            self.name = str(row[0][1])
+            try:
+                test_db.mssql.ExecNonQuery(test_db.update_student(self.id, self.src_group_id, self.dst_group_id))  # 更新
+            except Exception as e:
+                print(e)
+        finally:
+            self.textBrowser.append(str(response_msg) + '\n')
+
 
     def reject(self):
         self.close()
@@ -271,6 +336,12 @@ class Dialog11(QtWidgets.QMainWindow, w11.Ui_Dialog):
         self.close()
 
 
+class Dialog12(QtWidgets.QMainWindow, w_showimage.Ui_Dialog):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
+
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = Mywindow()
@@ -285,6 +356,8 @@ if __name__ == '__main__':
     w9 = Dialog9()
     w10 = Dialog10()
     w11 = Dialog11()
+    test_db.main()
+    w_showimage = Dialog12()
     window.show()
     # window.resize(700, 600)
     # w1.show()
