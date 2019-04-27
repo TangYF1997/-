@@ -266,7 +266,7 @@ class Dialog8(QtWidgets.QMainWindow, w8.Ui_Dialog):
         self.group = self.lineEdit_2.text()
         response_msg = add_face.delete_user(self.id, self.group)
         try:
-            test_db.mssql.ExecNonQuery(test_db.del_student(self.id, self.dst_group_id))
+            test_db.mssql.ExecNonQuery(test_db.del_student(self.id, self.group))
         except Exception as e:
             print(e)
         finally:
