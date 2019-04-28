@@ -135,11 +135,11 @@ def frameFace(img, A, B, C, D, user_id):
 # 在图上根据坐标画框
 
 
-def box_search(image_PIL, image_cv2, box_list):
+def box_search(image_PIL, image_cv2, box_list, group):
     student_list = []
     for box in box_list:
         image_box = image_PIL.crop(box)  # 此图为切割后的一个部分图像
-        student_list = search_face(image_box, student_list, image_cv2, box, "DX1503")  # 这里的group_list后面会变成变量
+        student_list = search_face(image_box, student_list, image_cv2, box, group)  # 这里的group_list后面会变成变量
     return student_list
 
 
@@ -292,7 +292,7 @@ def frame_face(image_compressed, response_content):
     2.图中最大人脸框的大小占图高的比例
     '''
 
-def attendance_system(filepath):
+def attendance_system(filepath, group):
     t1 = cv2.getTickCount()
     http_url = "https://api-cn.faceplusplus.com/facepp/v3/detect"  # 你要调用API的URL
     key = "qFlVJKRVTBaku9Z7RN88Il6uYqcUXVjP"
@@ -318,7 +318,7 @@ def attendance_system(filepath):
 
     box_list, count = cut_image(image_big, cv2_img, min_left_ratio, max_right_ratio,
                            min_top_ratio, max_bottom_ratio, max_length_of_frame_ratio)
-    student_list = box_search(image_big, cv2_img, box_list)
+    student_list = box_search(image_big, cv2_img, box_list, group)
     student_list2 = sorted(set(student_list), key=student_list.index)
     print(student_list2)
 

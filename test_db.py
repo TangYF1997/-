@@ -62,6 +62,17 @@ def update_student(user_id, user_name, course_id):  # 改
     return sql
 
 
+def update_student_count(user_id, course_id):  # 记录拍到次数
+    sql = "update "+course_id+" SET 拍到次数=Isnull(拍到次数,0)+1 where [学号（student_id）]=\'"+user_id+"\'"
+    return sql
+
+
+def update_student_efficiency(course_id):  # 改抬头率和是否到勤
+    sql = "update "+course_id+" SET 抬头率=Isnull(拍到次数,0)/40.0,是否到勤 = Isnull(拍到次数,0)"
+
+    return sql
+
+
 def search_student_in_course(course_id):  # 查全部
     sql = "SELECT * FROM "+course_id+""
     return sql
@@ -73,7 +84,10 @@ def search_student(user_id, course_id):  # 查一行
 
 
 def copy_student(user_id, src_course_id, dst_course_id):
-    sql = "insert into "+dst_course_id+" select * from "+src_course_id+" where [学号（student_id）]=\'"+user_id+"\'"
+    sql = """
+    insert into """+dst_course_id+""" select * from """+src_course_id+""" where [学号（student_id）]=\'"""+user_id+"""\'
+    UPDATE """+dst_course_id+""" SET [课程]=\'"""+dst_course_id+"""\' WHERE [学号（student_id）] = \'"""+user_id+"""\'
+    """
     return sql
 
 
@@ -101,17 +115,37 @@ def del_table(course_id):
     """
     return sql
 
+def wipe_data(course_id):
+    sql = "UPDATE "+course_id+" SET 拍到次数=null,抬头率=null,是否到勤=null"
+    return sql
+
+
+def output_table(course_id):
+    output = open('data.xls', 'w', encoding='gbk')
+    output.write('学号\t姓名\t课程\t拍到次数\t抬头率\t是否到勤\n')
+    row = mssql.ExecQuery(search_student_in_course(course_id))  # 输出excel
+    for i in range(len(row)):
+        for j in range(len(row[i])):
+            output.write(str(row[i][j]))  # write函数不能写int类型的参数，所以使用str()转化
+            output.write('\t')  # 相当于Tab一下，换一个单元格
+        output.write('\n')  # 写完一行立马换行
+    output.close()
+
 
 # def test():
     # rows = mssql.ExecNonQuery(add_student('0121509350314', '吴博二号', 'DIP'))  #注册
     # rows = mssql.ExecNonQuery(del_student('0121509350314', 'DIP'))  # 删除
     # mssql.ExecNonQuery(creat_table('DQP'))  # 创建表
     # mssql.ExecNonQuery(del_table('DMP'))  # 删除表
+    # mssql.ExecNonQuery(update_student_count('0121509350313', 'DSP'))
+    # mssql.ExecNonQuery(update_student_efficiency('DSP'))
+    # output_table('DSP')
 
-#
+
+
 # if __name__ == '__main__':
 #     main()
-    # test()
+#     test()
 
 #
 #

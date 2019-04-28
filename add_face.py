@@ -15,7 +15,7 @@ def add_face(filepath, user_id, group_id, user_info):
         base64_data = base64.b64encode(fp.read())
     img_base64_utf_8 = str(base64_data, 'utf-8')
 
-    params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id\":\""+group_id+"\",\"user_id\":\""+user_id+"\",\"user_info\":\"\",\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\",\"action_type\":\"REPLACE\"}"
+    params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id\":\""+group_id+"\",\"user_id\":\""+user_id+"\",\"user_info\":\""+user_info+"\",\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\",\"action_type\":\"REPLACE\"}"
     # params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id\":\""+group_id+"\",\"user_id\":\"8\",\"user_info\":\""+user_info+"\",\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\",\",\"action_type\":\"REPLACE \"}"
     access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
     request_url = request_url + "?access_token=" + access_token
@@ -56,7 +56,7 @@ def update_face(filepath, user_id, group_id, user_info):
         base64_data = base64.b64encode(fp.read())
     img_base64_utf_8 = str(base64_data, 'utf-8')
 
-    params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id\":\""+group_id+"\",\"user_id\":\""+user_id+"\",\"user_info\":\"\",\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\"}"
+    params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id\":\""+group_id+"\",\"user_id\":\""+user_id+"\",\"user_info\":\""+user_info+"\",\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\"}"
 
     access_token = '24.d4ec3047377e6ca61e27b571613df0e6.2592000.1557116267.282335-15647216'
     request_url = request_url + "?access_token=" + access_token

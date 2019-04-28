@@ -51,15 +51,25 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
 
     def show_image(self):
         self.filepath = self.lineEdit.text()
-        list,opencv_img = Facepp.attendance_system(self.filepath)
-        self.textBrowser.append(str(list))
-        rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
-        height, width, channel = rgb_img.shape
-        bytesPerLine = 3 * width
-        qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
-        pixmap = QPixmap.fromImage(qImg)
-        self.label_6.setPixmap(pixmap)
-        self.label_6.setScaledContents(True)
+        self.group = self.lineEdit_2.text()
+        attendance_list, opencv_img = Facepp.attendance_system(self.filepath, self.group)  # 人脸识别系统，返回学生列表和图片
+        self.textBrowser.append(str(attendance_list))  # 显示列表
+        try:
+            check_list(attendance_list, self.group)  # 更新数据库，只有一张图片，就来个全套操作
+            # 将数据库输出到ui和excel
+            row = test_db.mssql.ExecQuery(test_db.search_student_in_course(self.group))  # 数据库中查询
+            for i in row:
+                self.textBrowser.append(str(i))  # 在ui中显示表格
+        except Exception:
+            self.textBrowser.append("该组无用户或不存在于数据库")
+        finally:
+            rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
+            height, width, channel = rgb_img.shape
+            bytesPerLine = 3 * width
+            qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+            pixmap = QPixmap.fromImage(qImg)
+            self.label_6.setPixmap(pixmap)
+            self.label_6.setScaledContents(True)
 
     def show_bigimage(self):
         self.filepath = self.lineEdit.text()
@@ -73,6 +83,28 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
     def chose_img(self):
         path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu")
         self.lineEdit.setText(str(path[0]))
+
+    def output_excel(self):
+        self.group = self.lineEdit_2.text()
+        try:
+            test_db.output_table(self.group)
+            self.textBrowser.append("生成excel成功")s
+        except Exception:
+            self.textBrowser.append("生成excel失败")
+
+    def del_data(self):
+        try:
+            self.group = self.lineEdit_2.text()
+            test_db.mssql.ExecNonQuery(test_db.wipe_data(self.group))
+            self.textBrowser.append("清楚数据成功")
+        except Exception:
+            self.textBrowser.append("清楚数据失败")
+
+def check_list(list, group):
+    for student_id in list:
+        test_db.mssql.ExecNonQuery(test_db.update_student_count(student_id, group))  # 将的到的人脸列表一个个放入数据库中计算
+    test_db.mssql.ExecNonQuery(test_db.update_student_efficiency(group))  # 根据这轮运算，得到抬头率以及是否到勤
+
 
 
 '''
@@ -93,10 +125,9 @@ class Dialog1(QtWidgets.QMainWindow, w1.Ui_Dialog):
         response_msg = add_face.add_face(self.file_path, self.id, self.group, self.name)
         try:
             test_db.mssql.ExecNonQuery(test_db.add_student(self.id, self.name, self.group))  # 注册
+            self.textBrowser.append(str(response_msg))
         except Exception:
             self.textBrowser.append("该学生已注册，请不要重复注册")
-        finally:
-            self.textBrowser.append(str(response_msg))
 
     def chose_img(self):
         path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\Pictures\\大教室2")
