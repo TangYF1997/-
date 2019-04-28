@@ -88,7 +88,7 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
         self.group = self.lineEdit_2.text()
         try:
             test_db.output_table(self.group)
-            self.textBrowser.append("生成excel成功")s
+            self.textBrowser.append("生成excel成功")
         except Exception:
             self.textBrowser.append("生成excel失败")
 
