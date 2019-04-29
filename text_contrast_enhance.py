@@ -1,12 +1,10 @@
 # encoding:utf-8
-import base64,cv2
-import numpy as np
 import urllib
 import urllib.request as urllib2
-import matplotlib.pyplot as plt
 
 '''
 图像对比度增强
+传入base64编码后的图片，传出utf-8编码base64后的图片
 '''
 
 

@@ -119,11 +119,17 @@ def search_face(image_box, student_list, image, box, group_id_list):
 # 返回ABCD四点坐标，是在输入图像中的坐标，后面要在原图显示得处理一下
 
 
-def resize_img(image):
-    width = image.shape[1]  # 8000
-    height = image.shape[0]  # 6000
-    resized_img = cv2.resize(image, (int(width/2), int(height/2)), interpolation=cv2.INTER_AREA)
+def resize_img(image_cv2):
+    width = image_cv2.shape[1]  # 8000
+    height = image_cv2.shape[0]  # 6000
+    resized_img = cv2.resize(image_cv2, (int(width/2), int(height/2)), interpolation=cv2.INTER_AREA)
     return resized_img
+
+
+def resize_pil_image(img_pil):
+    size = img_pil.size
+    im_resized = img_pil.resize(int(size[0]/2), int(size[1]/2))
+    return im_resized
 
 
 def show_images(image_list):
@@ -171,6 +177,9 @@ def box_search(image_PIL, image_cv2, box_list, group):
     student_list = []
     for box in box_list:
         image_box = image_PIL.crop(box)  # 此图为切割后的一个部分图像
+        image_size = image_box.size
+        if image_size[1] > 1000:
+            image_box = resize_pil_image(image_box)
         student_list = search_face(image_box, student_list, image_cv2, box, group)  # 这里的group_list后面会变成变量
     return student_list
 
