@@ -3,6 +3,7 @@ import ast
 import cv2
 import matplotlib.pyplot as plt
 import urllib.request as urllib2
+import urllib
 import math
 from io import BytesIO
 import base64
@@ -13,6 +14,33 @@ import numpy as np
 调用Face++的API来实现将一张高清原图中的人脸聚集部分切割下来，然后分块，方便百度人脸M:N搜索
 '''
 null = ''
+
+
+'''
+图像对比度增强
+'''
+
+
+def contrast_enhance(img_base64):
+    request_url = "https://aip.baidubce.com/rest/2.0/image-process/v1/contrast_enhance"
+
+    params = {"image": img_base64}
+    params = urllib.parse.urlencode(params)
+
+    access_token = '24.52e67e0599cb4127b965e29c0409b964.2592000.1559116211.282335-16141688'
+    request_url = request_url + "?access_token=" + access_token
+    request = urllib2.Request(url=request_url, data=params.encode("utf-8"))
+    request.add_header('Content-Type', 'application/x-www-form-urlencoded')
+    response = urllib2.urlopen(request)
+    content = response.read().decode("utf-8")
+    content = eval(content)
+    try:
+        img = content['image']
+    except Exception:
+        print("图像出错了")
+    finally:
+        return img
+
 
 def get_face_location(location):
     Theta = location['rotation'] / 60  # 注意：为啥是60度，自己多次测试的结果，必须得弄清楚rotation啥意思，相对于哪里的旋转角度
@@ -40,7 +68,11 @@ def search_face(image_box, student_list, image, box, group_id_list):
     # print(img_base64_utf_8)
     #
     # global null
-    img_base64_utf_8 = str(PIL2base64(image_box), 'utf-8')
+    img_base64 = PIL2base64(image_box)
+
+    img_base64_utf_8 = contrast_enhance(img_base64)
+
+    # img_base64_utf_8 = str(img_base64, 'utf-8')
 
     params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id_list\":\""+group_id_list+"\",\"max_face_num\" : 10,\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\"}"
 
