@@ -70,9 +70,9 @@ def search_face(image_box, student_list, image, box, group_id_list):
     # global null
     img_base64 = PIL2base64(image_box)
 
-    img_base64_utf_8 = contrast_enhance(img_base64)
+    # img_base64_utf_8 = contrast_enhance(img_base64)
 
-    # img_base64_utf_8 = str(img_base64, 'utf-8')
+    img_base64_utf_8 = str(img_base64, 'utf-8')
 
     params = "{\"image\":\"" + img_base64_utf_8 + " \",\"image_type\":\"BASE64\",\"group_id_list\":\""+group_id_list+"\",\"max_face_num\" : 10,\"quality_control\":\"NONE\",\"liveness_control\":\"NONE\"}"
 

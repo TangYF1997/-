@@ -4,9 +4,28 @@ import w1,w2,w3,w4,w5,w6,w7,w8,w9,w10,w11,w_showimage
 from PyQt5.QtGui import QPixmap, QImage
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene
 import add_face, Facepp
+from PyQt5.QtCore import *
 from PyQt5 import QtWidgets, QtGui
 import pymssql
 import test_db
+
+
+class WorkThread(QThread):
+    update_date=pyqtSignal(str)
+
+    def __int__(self):
+        super(WorkThread, self).__init__()
+
+    def run(self):
+        while True:
+            print("1")
+            filepath = window.lineEdit.text()
+            print("1")
+            group = window.lineEdit_2.text()
+            print("2")
+            attendance_list, opencv_img = Facepp.attendance_system(filepath, group)  # 人脸识别系统，返回学生列表和图片
+            self.update_date.emit(str(attendance_list))
+
 
 
 class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
@@ -50,26 +69,37 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
         w11.show()
 
     def show_image(self):
-        self.filepath = self.lineEdit.text()
-        self.group = self.lineEdit_2.text()
-        attendance_list, opencv_img = Facepp.attendance_system(self.filepath, self.group)  # 人脸识别系统，返回学生列表和图片
-        self.textBrowser.append(str(attendance_list))  # 显示列表
-        try:
-            check_list(attendance_list, self.group)  # 更新数据库，只有一张图片，就来个全套操作
-            # 将数据库输出到ui和excel
-            row = test_db.mssql.ExecQuery(test_db.search_student_in_course(self.group))  # 数据库中查询
-            for i in row:
-                self.textBrowser.append(str(i))  # 在ui中显示表格
-        except Exception:
-            self.textBrowser.append("该组无用户或不存在于数据库")
-        finally:
-            rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
-            height, width, channel = rgb_img.shape
-            bytesPerLine = 3 * width
-            qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
-            pixmap = QPixmap.fromImage(qImg)
-            self.label_6.setPixmap(pixmap)
-            self.label_6.setScaledContents(True)
+        print("1")
+        self.backend = WorkThread()
+        print("1")
+        # 信号连接到界面显示槽函数
+        self.backend.update_date.connect(self.handleDisplay)
+        print("1")
+        self.backend.start()
+        # self.filepath = self.lineEdit.text()
+        # self.group = self.lineEdit_2.text()
+        #
+        # attendance_list, opencv_img = Facepp.attendance_system(self.filepath, self.group)  # 人脸识别系统，返回学生列表和图片
+
+    def handleDisplay(self,data):
+
+        self.textBrowser.append(data)  # 显示列表
+        # try:
+        #     check_list(attendance_list, self.group)  # 更新数据库，只有一张图片，就来个全套操作
+        #     # 将数据库输出到ui和excel
+        #     row = test_db.mssql.ExecQuery(test_db.search_student_in_course(self.group))  # 数据库中查询
+        #     for i in row:
+        #         self.textBrowser.append(str(i))  # 在ui中显示表格
+        # except Exception:
+        #     self.textBrowser.append("该组无用户或不存在于数据库")
+        # finally:
+            # rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
+            # height, width, channel = rgb_img.shape
+            # bytesPerLine = 3 * width
+            # qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+            # pixmap = QPixmap.fromImage(qImg)
+            # self.label_6.setPixmap(pixmap)
+            # self.label_6.setScaledContents(True)
 
     def show_bigimage(self):
         self.filepath = self.lineEdit.text()
@@ -386,19 +416,19 @@ class Dialog12(QtWidgets.QMainWindow, w_showimage.Ui_Dialog):
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = Mywindow()
-    w1 = Dialog1()
-    w2 = Dialog2()
-    w3 = Dialog3()
-    w4 = Dialog4()
-    w5 = Dialog5()
-    w6 = Dialog6()
-    w7 = Dialog7()
-    w8 = Dialog8()
-    w9 = Dialog9()
-    w10 = Dialog10()
-    w11 = Dialog11()
-    test_db.main()
-    w_showimage = Dialog12()
+    # w1 = Dialog1()
+    # w2 = Dialog2()
+    # w3 = Dialog3()
+    # w4 = Dialog4()
+    # w5 = Dialog5()
+    # w6 = Dialog6()
+    # w7 = Dialog7()
+    # w8 = Dialog8()
+    # w9 = Dialog9()
+    # w10 = Dialog10()
+    # w11 = Dialog11()
+    # test_db.main()
+    # w_showimage = Dialog12()
     window.show()
     # window.resize(700, 600)
     # w1.show()
