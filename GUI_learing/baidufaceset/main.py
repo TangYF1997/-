@@ -11,6 +11,27 @@ import test_db
 
 
 class WorkThread(QThread):
+    update_date = pyqtSignal(list)
+
+    def __int__(self):
+        super(WorkThread, self).__init__()
+
+    def run(self):
+        filepath = window.lineEdit.text()
+        group = window.lineEdit_2.text()
+        window.textBrowser.append("考勤中，请等待。。。。。")
+        attendance_list, opencv_img = Facepp.attendance_system(filepath, group)  # 人脸识别系统，返回学生列表和图片
+        rgb_img = cv2.cvtColor(opencv_img, cv2.COLOR_BGR2RGB)
+        height, width, channel = rgb_img.shape
+        bytesPerLine = 3 * width
+        qImg = QImage(rgb_img.data, width, height, bytesPerLine, QImage.Format_RGB888)
+        pixmap = QPixmap.fromImage(qImg)
+        window.label_6.setPixmap(pixmap)
+        window.label_6.setScaledContents(True)
+        self.update_date.emit(attendance_list)
+
+
+class WorkThread(QThread):
     update_date=pyqtSignal(str)
 
     def __int__(self):
@@ -71,10 +92,8 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
     def show_image(self):
         print("1")
         self.backend = WorkThread()
-        print("1")
         # 信号连接到界面显示槽函数
         self.backend.update_date.connect(self.handleDisplay)
-        print("1")
         self.backend.start()
         # self.filepath = self.lineEdit.text()
         # self.group = self.lineEdit_2.text()
@@ -102,13 +121,15 @@ class Mywindow(QtWidgets.QMainWindow, faceset_ui.Ui_MainWindow):
             # self.label_6.setScaledContents(True)
 
     def show_bigimage(self):
-        self.filepath = self.lineEdit.text()
+        self.filepath = "C:\\Users\Administrator\\PycharmProjects\\untitled\\faceKu\\28.jpg"
         w_showimage.show()
         pix = QPixmap(self.filepath)
-        self.item = QGraphicsPixmapItem(pix)
-        self.scene = QGraphicsScene()  # 创建场景s
-        self.scene.addItem(self.item)
-        w_showimage.graphicsView.setScene(self.scene)
+        # self.item = QGraphicsPixmapItem(pix)
+        # self.scene = QGraphicsScene()  # 创建场景s
+        # self.scene.addItem(self.item)
+        # w_showimage.graphicsView.setScene(self.scene)
+        w_showimage.label.setPixmap(pix)
+        w_showimage.label.setScaledContents(True)
 
     def chose_img(self):
         path, name = QtWidgets.QFileDialog.getOpenFileNames(self, "选择图片", "C:\\Users\\Administrator\\PycharmProjects\\untitled\\faceKu")

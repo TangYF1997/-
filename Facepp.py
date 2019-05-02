@@ -169,7 +169,7 @@ def frameFace(img, A, B, C, D, user_id):
     cv2.line(img, tuple(B), tuple(C), (0, 0, 255), 2)
     cv2.line(img, tuple(C), tuple(D), (0, 0, 255), 2)
     cv2.line(img, tuple(D), tuple(A), (0, 0, 255), 2)
-    cv2.putText(img, user_id, tuple(A), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(img, user_id, tuple(A), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2)
 # 在图上根据坐标画框
 
 
